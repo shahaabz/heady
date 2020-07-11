@@ -27,9 +27,10 @@ class ProductController {
         // Save Product in the database
         product.save()
             .then(data => {
-                res.send(data);
+                res.send({ success: true, data: data });
             }).catch(err => {
                 res.status(500).send({
+                    success: false,
                     message: err.message || "Some error occurred while creating the Product."
                 });
             });
@@ -48,17 +49,20 @@ class ProductController {
                 .then(products => {
                     if (!products.length) {
                         return res.status(404).send({
+                            success: false,
                             message: `Products not found mapped with categoryId ${categoryId}`
                         });
                     }
-                    res.send(products);
+                    res.send({ success: true, data: products });
                 }).catch(err => {
                     if (err.kind === 'ObjectId') {
                         return res.status(404).send({
+                            success: false,
                             message: `Product not found with categoryId " ${categoryId}`
                         });
                     }
                     res.status(500).send({
+                        success: false,
                         message: err.message || "Something went wrong!"
                     });
                 });
@@ -79,6 +83,7 @@ class ProductController {
             let productId = req.params.productId;
             if (!req.body.name || !req.body.price) {
                 return res.status(400).send({
+                    success: false,
                     message: "Product name & price is required!. Please check the form."
                 });
             }
@@ -93,17 +98,23 @@ class ProductController {
                 .then(product => {
                     if (!product) {
                         return res.status(404).send({
+                            success: false,
                             message: `Product not found with id ${productId}`
                         });
                     }
-                    res.send(product);
+                    res.send({
+                        success: true,
+                        data: product
+                    });
                 }).catch(err => {
                     if (err.kind === 'ObjectId') {
                         return res.status(404).send({
+                            success: false,
                             message: `Product not found with id ${productId}`
                         });
                     }
                     return res.status(500).send({
+                        success: false,
                         message: `Error updating Product with id ${productId}`
                     });
                 });

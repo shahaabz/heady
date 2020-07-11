@@ -13,6 +13,7 @@ class CategoryController {
             let { name, parent } = req.body;
             if (!name) {
                 return res.status(400).send({
+                    success: false,
                     message: "Form validation failed. Please fill the form correctly!"
                 });
             }
@@ -24,9 +25,10 @@ class CategoryController {
             // Save Category in the database
             category.save()
                 .then(data => {
-                    res.send(data);
+                    res.send({ success: true, data: data });
                 }).catch(err => {
                     res.status(500).send({
+                        success: false,
                         message: err.message || "Something went wrong while creating the category!"
                     });
                 });
@@ -54,9 +56,10 @@ class CategoryController {
                     }
                 }
             ]).then(categories => {
-                res.send(categories);
+                res.send({ success: true, data: categories });
             }).catch(err => {
                 res.status(500).send({
+                    success: false,
                     message: err.message || "Something went wrong while fetching the categories."
                 });
             });
