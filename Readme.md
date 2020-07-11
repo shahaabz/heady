@@ -1,4 +1,11 @@
 
+# Start app
+```bash 
+npm install
+
+node app.js
+```
+
 # APIs
 
 
