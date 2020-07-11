@@ -1,17 +1,17 @@
 const express = require('express');
 const config = require('config');
+const bodyParser = require("body-parser");
 
-const er = require('./error');
 const mongoConnect = require('./database/mongo_connection');
-
+const routes = require('./routes/api');
 
 const app = express();
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-    er.eee();
-    res.send('dwd');
-});
+app.use('/', routes);
+
 
 /*** Error ***/
 app.use((req, res, next) => {
@@ -26,7 +26,7 @@ app.use((error, req, res, next) => {
         success: false,
         message: error.message
     };
-    if (config.get('app.debug')) response.stack = error.stack;
+    if (config.get('app_debug')) response.stack = error.stack;
     res.status(statusCodes).json(response);
 });
 
